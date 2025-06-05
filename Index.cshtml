@@ -1,0 +1,116 @@
+﻿@model IEnumerable<PersonResponse>
+
+@{
+    ViewBag.Title = "Person Data";
+}
+
+<a asp-controller="Persons" asp-action="Create">Create Person</a>
+<a asp-controller="Persons" asp-action="GenaratePDF">Generate PDF to Persons</a>
+<a asp-controller="Persons" asp-action="PersonsCSV">Download CSV to Persons</a>
+<a asp-controller="Persons" asp-action="PersonsExcel">Download Excel to Persons</a>
+
+<form asp-controller="Persons" asp-action="Index" method="get">
+    <h1>Persons</h1>
+    <div class="box flex">
+        <div class="flex-1">
+            <select class="form-input" name="SearchBy">
+                @foreach (var field in ViewBag.SearchFields)
+                {
+                    if (field.Key == ViewBag.SearchBy)
+                    {
+                        <option value="@field.Key" selected="selected">@field.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@field.Key">@field.Value</option>
+                    }
+                    
+                }
+                @* SearchBy=PersonName&searchString=abc*@
+            </select>
+
+        </div>
+        <div class="flex-1">
+            <input type="search" id="Search" class="form-input" placeholder="Search" name="searchString" value="@ViewBag.SearchString" />
+        </div>
+        <div class="flex-1">
+            <button class="button button-blue-back">Search</button>
+            <a asp-controller="Persons" asp-action="Index" class="link-hover">Clear all</a>
+        </div>
+    </div>
+    <table class="table w-100 mt">
+        <thead>
+            <tr>
+                @await Html.PartialAsync("_GridSortTechnic", new ViewDataDictionary(ViewData)
+                {
+                    {"ColumnName", nameof(PersonResponse.PersonName)},
+                    {"DisplayName", "Person Name"}
+                })
+
+                @await Html.PartialAsync("_GridSortTechnic", new ViewDataDictionary(ViewData)
+                {
+                    {"ColumnName", nameof(PersonResponse.Email)},
+                    {"DisplayName", "Email"}
+                })
+               
+                @await Html.PartialAsync("_GridSortTechnic", new ViewDataDictionary(ViewData)
+                {
+                    {"ColumnName", nameof(PersonResponse.DateofBirth)},
+                    {"DisplayName", "Date Of Birth"}
+                })
+
+                @await Html.PartialAsync("_GridSortTechnic", new ViewDataDictionary(ViewData)
+                {
+                {"ColumnName", nameof(PersonResponse.Age)},
+                {"DisplayName", "Age"}
+                })
+
+                @await Html.PartialAsync("_GridSortTechnic", new ViewDataDictionary(ViewData)
+                {
+                {"ColumnName", nameof(PersonResponse.Gender)},
+                {"DisplayName", "Gender"}
+                })
+
+                @await Html.PartialAsync("_GridSortTechnic", new ViewDataDictionary(ViewData)
+                {
+                    {"ColumnName", nameof(PersonResponse.Country)},
+                    {"DisplayName", "Country"}
+                })
+
+                @await Html.PartialAsync("_GridSortTechnic", new ViewDataDictionary(ViewData)
+                {
+                {"ColumnName", nameof(PersonResponse.Address)},
+                {"DisplayName", "Address"}
+                })
+
+                @await Html.PartialAsync("_GridSortTechnic", new ViewDataDictionary(ViewData)
+                {
+                {"ColumnName", nameof(PersonResponse.ReceivNewsLetters)},
+                {"DisplayName", "Receive News Letters"}
+                })
+               
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (PersonResponse person in Model)
+            {
+                <tr>
+                    <td>@person.PersonName</td>
+                    <td>@person.Email</td>
+                    <td>@person.DateofBirth?.ToString("dd MMM yyyy")</td>
+                    <td>@person.Age</td>
+                    <td>@person.Gender</td>
+                    <td>@person.Country</td>
+                    <td>@person.Address</td>
+                    <td>@person.ReceivNewsLetters</td>
+                    <td><a asp-controller="Persons" asp-action="Edit" asp-route-PersonId="@person.PersonId" >Edit</a></td>
+                    @* Eg: Persons/Edit/1 *@
+                    <td><a asp-controller="Persons" asp-action="Delete" asp-route-PersonId="@person.PersonId">Delete</a></td>
+                    @* Eg: Persons/Delete/1 *@
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</form>
